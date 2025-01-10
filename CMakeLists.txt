@@ -52,11 +52,13 @@ if(QUATRO_DEBUG)
 endif()
 
 ### output as catkin package
-find_package(catkin REQUIRED)
-catkin_package( #this automatically adds/installs the results of build
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-)
+# find_package(catkin REQUIRED)
+# catkin_package( #this automatically adds/installs the results of build
+#   INCLUDE_DIRS include
+#   LIBRARIES ${PROJECT_NAME}
+# )
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 
 ### get packages' headers
 include_directories(
@@ -69,9 +71,11 @@ include_directories(
 ## Build ##
 ###########
 ### main
-add_library(${PROJECT_NAME} src/fpfh.cc src/matcher.cc src/quatro_module.cc)
+ament_auto_add_library(${PROJECT_NAME} src/fpfh.cc src/matcher.cc src/quatro_module.cc)
 if (QUATRO_TBB)
   target_link_libraries(${PROJECT_NAME} ${OpenMP_LIBS} ${EIGEN3_LIBS} ${PCL_LIBRARIES} teaserpp::teaser_registration teaserpp::teaser_io ${TBB_LIBRARY})
 else()
   target_link_libraries(${PROJECT_NAME} ${OpenMP_LIBS} ${EIGEN3_LIBS} ${PCL_LIBRARIES} teaserpp::teaser_registration teaserpp::teaser_io)
 endif()
+
+ament_auto_package()
